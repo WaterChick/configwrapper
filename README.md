@@ -1,1 +1,2 @@
 Simple Configuration Library which uses boosted-yaml as a dependency
+[![](https://jitpack.io/v/WaterChick/configwrapper.svg)](https://jitpack.io/#WaterChick/configwrapper)
