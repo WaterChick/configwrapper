@@ -2,6 +2,7 @@ package cz.waterchick.configwrapper;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
+import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public abstract class Config {
         }
         ClassLoader classLoader = getClass().getClassLoader();
         try {
-            this.config = YamlDocument.create(file, classLoader.getResourceAsStream(name), UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version")).build());
+            this.config = YamlDocument.create(file, classLoader.getResourceAsStream(name), LoaderSettings.builder().setAutoUpdate(true).build(), UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version")).build());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
