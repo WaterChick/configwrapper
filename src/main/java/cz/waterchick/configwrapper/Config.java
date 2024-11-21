@@ -27,9 +27,9 @@ public abstract class Config {
         if(!dataFolder.exists()){
             dataFolder.mkdirs();
         }
-        copyFileFromResource();
+        ClassLoader classLoader = getClass().getClassLoader();
         try {
-            config = YamlDocument.create(file, UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version")).build());
+            this.config = YamlDocument.create(file, classLoader.getResourceAsStream(name), UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version")).build());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,22 +58,4 @@ public abstract class Config {
     public abstract void onLoad();
 
     public abstract void onSave();
-
-    private void copyFileFromResource(){
-        if(file.exists()){
-            return;
-        }
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream resource = classLoader.getResourceAsStream(name);
-        try {
-            file.createNewFile();
-            if(resource == null){
-                return;
-            }
-            Path copied = this.file.toPath();
-            Files.copy(resource, copied, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
