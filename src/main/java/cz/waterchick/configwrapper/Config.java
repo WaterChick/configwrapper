@@ -1,6 +1,8 @@
 package cz.waterchick.configwrapper;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
+import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +29,7 @@ public abstract class Config {
         }
         copyFileFromResource();
         try {
-            config = YamlDocument.create(file);
+            config = YamlDocument.create(file, UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version")).build());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
