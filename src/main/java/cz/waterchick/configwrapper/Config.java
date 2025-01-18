@@ -2,15 +2,12 @@ package cz.waterchick.configwrapper;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
+import dev.dejvokep.boostedyaml.settings.Settings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 public abstract class Config {
     private final String name;
@@ -30,7 +27,11 @@ public abstract class Config {
         }
         ClassLoader classLoader = getClass().getClassLoader();
         try {
-            this.config = YamlDocument.create(file, classLoader.getResourceAsStream(name), LoaderSettings.builder().setAutoUpdate(true).build(), UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version")).build());
+            if(getSettings() != null){
+                this.config = YamlDocument.create(file, classLoader.getResourceAsStream(name), getSettings());
+            }else{
+                this.config = YamlDocument.create(file, classLoader.getResourceAsStream(name));
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -59,4 +60,6 @@ public abstract class Config {
     public abstract void onLoad();
 
     public abstract void onSave();
+
+    public abstract Settings[] getSettings();
 }
